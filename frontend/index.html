@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>medBot – AI Health Assistant</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="main-container">
+        <header>
+            <div class="logo">🩺 medBot</div>
+            <div class="status-badge">AI Online</div>
+        </header>
+
+        <div class="disclaimer">
+            <span class="icon">⚠️</span> 
+            <span><b>Note:</b> This is an AI guidance system, not a doctor. Call emergency services for critical conditions.</span>
+        </div>
+
+        <div id="chatbox">
+            <div class="message bot">
+                <div class="bubble">
+                    Hello! I am medBot. Describe your symptoms, and I'll help assess the situation.
+                </div>
+            </div>
+        </div>
+
+        <div class="input-area">
+            <div class="input-wrapper">
+                <input id="userInput" type="text" placeholder="Type your symptoms here..." autocomplete="off" onkeydown="if(event.key === 'Enter') sendMessage()">
+                <button class="icon-btn voice-btn" onclick="startVoice()" title="Speak">
+                    🎤
+                </button>
+            </div>
+            <button class="send-btn" onclick="sendMessage()">
+                Send <span>➤</span>
+            </button>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>

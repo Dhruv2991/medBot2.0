@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Hospital medBot Check-in</title>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #eef2f7;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    .container {
+      background: white;
+      padding: 30px;
+      width: 420px;
+      border-radius: 10px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 20px;
+      color: #2c3e50;
+    }
+
+    label {
+      font-weight: bold;
+      margin-top: 12px;
+      display: block;
+      color: #34495e;
+    }
+
+    input, textarea {
+      width: 100%;
+      padding: 10px;
+      margin-top: 6px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+      font-size: 14px;
+    }
+
+    textarea {
+      resize: none;
+      height: 90px;
+    }
+
+    button {
+      width: 100%;
+      padding: 12px;
+      margin-top: 20px;
+      background: #0d6efd;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #0b5ed7;
+    }
+
+    .result {
+      margin-top: 25px;
+      padding: 15px;
+      background: #f1f3f5;
+      border-radius: 5px;
+    }
+
+    .high {
+      color: red;
+      font-weight: bold;
+    }
+
+    .medium {
+      color: orange;
+      font-weight: bold;
+    }
+
+    .low {
+      color: green;
+      font-weight: bold;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="container">
+    <h2>🏥 Hospital medBot Check-in</h2>
+
+    <label for="name">Patient Name</label>
+    <input type="text" id="name" placeholder="Enter patient name" />
+
+    <label for="age">Age</label>
+    <input type="number" id="age" placeholder="Enter age" />
+
+    <label for="symptoms">Symptoms</label>
+    <textarea id="symptoms" placeholder="Describe symptoms"></textarea>
+
+    <button onclick="checkIn()">Check In</button>
+
+    <div id="output" class="result" style="display:none;"></div>
+  </div>
+
+  <script>
+    async function checkIn() {
+      const name = document.getElementById("name").value.trim();
+      const age = document.getElementById("age").value.trim();
+      const symptoms = document.getElementById("symptoms").value.trim();
+
+      if (!name || !age || !symptoms) {
+        alert("Please fill all fields");
+        return;
+      }
+
+      try {
+        const response = await fetch(
+          "http://127.0.0.1:6000/hospital/checkin",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+              name: name,
+              age: age,
+              symptoms: symptoms
+            })
+          }
+        );
+
+        if (!response.ok) {
+          throw new Error("Server error");
+        }
+
+        const data = await response.json();
+
+        let riskClass = "low";
+        if (data.risk === "HIGH") riskClass = "high";
+        else if (data.risk === "MEDIUM") riskClass = "medium";
+
+        const output = document.getElementById("output");
+        output.style.display = "block";
+        output.innerHTML = `
+          <p><b>Patient:</b> ${data.patient_name}</p>
+          <p><b>Risk Level:</b> <span class="${riskClass}">${data.risk}</span></p>
+          <p><b>Priority:</b> ${data.priority}</p>
+          <p><b>Department:</b> ${data.department}</p>
+          <p><b>Instruction:</b> ${data.instruction}</p>
+        `;
+      } catch (error) {
+        alert("Cannot connect to hospital server. Is it running?");
+        console.error(error);
+      }
+    }
+  </script>
+
+</body>
+</html>
