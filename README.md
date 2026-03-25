@@ -192,3 +192,8 @@ Feel free to fork, improve, and contribute!
 ## 📜 License
 
 This project is for educational and research purposes.
+
+## 📸 Screenshots
+
+![UI](assets/UI.png)
+![Result](assets/output.png)
